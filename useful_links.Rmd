@@ -1,0 +1,136 @@
+---
+title: "Useful R Links"
+output: 
+  pdf_document:
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(kableExtra)
+```
+
+# Useful Webpages
+
+```{r links}
+links <- data.frame(
+  Webpage = c(
+    "CRAN", "Metacran", "R Seek", "R-bloggers"
+  ),
+  Description = c(
+    "The R homepage, get information about R and download it", 
+    "Search and browse all CRAN/R packages. Get useful meta statistics about each package",
+    "A google search engine specific for R",
+    "A compendium of R blog posts"
+  ),
+  URL = c(
+    "https://www.r-project.org",
+    "https://www.r-pkg.org",
+    "https://rseek.org",
+    "https://www.r-bloggers.com"
+  )
+)
+kable(links, format = "latex", booktabs = TRUE) %>%
+  column_spec(1, width = "8em") %>% 
+  column_spec(2, width = "18em") %>%
+  column_spec(3, width = "18em")
+```
+
+# Useful Blog Posts
+
+```{r blogs}
+blogs <- data.frame(
+  `Blog Title` = c(
+    "How R Searches and Finds Stuff",
+    "Rbitrary Standards"
+  ),
+  Description = c(
+    "A fantastic explanation of how R's environments work",
+    "An explanation of R's many quirks"
+  ),
+  URL = c(
+    "http://blog.obeautifulcode.com/R/How-R-Searches-And-Finds-Stuff/",
+    "https://ironholds.org/projects/rbitrary/"
+  ),
+  check.names = FALSE
+)
+kable(blogs, format = "latex", booktabs = TRUE) %>%
+  column_spec(1, width = "8em") %>% 
+  column_spec(2, width = "18em") %>%
+  column_spec(3, width = "18em")
+```
+
+# Good Packages
+
+```{r packages}
+packages <- data.frame(
+  Package = c(
+    "The tidyverse",
+    "Rmarkdown",
+    "shiny",
+    "devtools",
+    "testthat"
+  ),
+  Description = c(
+    "The tidyverse is an opinionated collection of R packages designed for data science. All packages share an underlying design philosophy, grammar, and data structures.",
+    "R Markdown provides an authoring framework for data science.",
+    "Shiny is an R package that makes it easy to build interactive web apps straight from R.",
+    "Painless package development for R",
+    "Unit testing in R"
+  ),
+  URL = c(
+    "https://www.tidyverse.org",
+    "https://rmarkdown.rstudio.com",
+    "https://shiny.rstudio.com",
+    "https://www.rstudio.com/products/rpackages/devtools/",
+    "https://github.com/r-lib/testthat"
+  ),
+  check.names = FALSE
+)
+kable(packages, format = "latex", booktabs = TRUE) %>%
+  column_spec(1, width = "8em") %>% 
+  column_spec(2, width = "18em") %>%
+  column_spec(3, width = "18em")
+```
+
+# Free Online Books
+
+```{r books}
+books <- data.frame(
+  `Book Title` = c(
+    "Advanced R",
+    "Cookbook for R",
+    "Efficient R Programming",
+    "Plotly",
+    "R for Data Science",
+    "R Packages",
+    "Text Mining with R",
+    "The caret Package"
+  ),
+  Description = c(
+    "The book is designed primarily for R users who want to improve their programming skills and understanding of the language. It should also be useful for programmers coming to R from other languages, as it explains some of R’s quirks and shows how some parts that seem horrible do have a positive side.",
+    "The goal of the cookbook is to provide solutions to common tasks and problems in analyzing data.",
+    "Efficient R Programming is about increasing the amount of work you can do with R in a given amount of time.",
+    "Plotly's R graphing library makes interactive, publication-quality graphs online.",
+    "This book will teach you how to do data science with R: You’ll learn how to get your data into R, get it into the most useful structure, transform it, visualise it and model it.",
+    "Packages are the fundamental units of reproducible R code. They include reusable R functions, the documentation that describes how to use them, and sample data. In this book you’ll learn how to turn your code into packages that others can easily download and use.",
+    "This book serves as an introduction of text mining using the tidytext package and other tidy tools in R.",
+    "The caret package is a set of functions that attempt to streamline the process for creating predictive models."
+  ),
+  URL = c(
+    "http://adv-r.had.co.nz",
+    "http://www.cookbook-r.com",
+    "https://csgillespie.github.io/efficientR/",
+    "https://plotly-book.cpsievert.me",
+    "https://r4ds.had.co.nz",
+    "http://r-pkgs.had.co.nz",
+    "https://www.tidytextmining.com/index.html",
+    "http://topepo.github.io/caret/index.html"
+  ),
+  check.names = FALSE
+)
+kable(books, format = "latex", booktabs = TRUE) %>%
+  column_spec(1, width = "8em") %>% 
+  column_spec(2, width = "18em") %>%
+  column_spec(3, width = "18em")
+```
