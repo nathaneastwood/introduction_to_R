@@ -1,0 +1,650 @@
+---
+title: "An Overview of R"
+author: "Nathan Eastwood"
+date: "`r format(Sys.Date(), '%d/%m/%Y')`"
+output: 
+  ioslides_presentation:
+    widescreen: true
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE, warning = FALSE)
+library(here)
+library(rgdal)
+library(tidyverse)
+library(maptools)
+library(leaflet)
+library(shiny)
+library(tibble)
+options(tibble.print_max = 5, max.print=5, tibble.width = 80, width = 80)
+```
+
+<style>
+div.footnotes {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 10px;
+  width: 80%;
+  font-size: 0.6em;
+}
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('slide:not(.backdrop):not(.title-slide)').append('<div class=\"footnotes\">');
+
+    $('footnote').each(function(index) {
+      var text  = $(this).html();
+      var fnNum = (index+1).toString().sup();
+      $(this).html(text + fnNum);
+
+      var footnote   = fnNum + ': ' + $(this).attr('content') + '<br/>';
+      var oldContent = $(this).parents('slide').children('div.footnotes').html();
+      var newContent = oldContent + footnote;
+      $(this).parents('slide').children('div.footnotes').html(newContent);
+    });
+  });
+</script>
+
+## Let's Connect!
+
+<table style="width:100%">
+  <tr>
+    <td><img src="https://image.flaticon.com/icons/png/512/25/25231.png" alt="GitHub" style="width:50px;height:50px;"></td>
+    <td>nathaneastwood</td> 
+  </tr>
+  <tr>
+    <td><img src="https://image.flaticon.com/icons/png/512/23/23931.png" alt="GitHub" style="width:50px;height:50px;"></td>
+    <td>@nathaneastwood_</td> 
+  </tr>
+  <tr>
+    <td><img src="https://image.flaticon.com/icons/png/512/61/61109.png" alt="LinkedIn" style="width:50px;height:50px;"></td>
+    <td>nathaneastwood</td> 
+  </tr>
+  <tr>
+    <td><img src="https://www.scouts.ie/ImageLibrary/News-Images/2017/www-logo.png" alt="WebPage" style="width:50px;height:50px;"></td>
+    <td>http://nathaneastwood.github.io</td> 
+  </tr>
+</table>
+
+# About Me
+
+## Education
+
+| Univeristy | Degree | Grade |
+| ---------- | ------ | ----- |
+| Plymouth University | BSc Mathematics and Statistics | $1^{st}$ Class (Hons) |
+| Sheffield University | MSc Statistics | Distinction |
+
+## Employment History
+
+| Company | Title | Time |
+| ------- | ----- | ---- |
+| Nuffield Health Foundation | Data Analyst | Summer 2011 |
+| C3 Resources | Data Analyst | Jun. 2012 - Jan. 2013 |
+| Plymouth University | Data Scientist | Feb. 2013 - Feb. 2016 |
+| Mango Solutions | Data Science Consultant | Mar. 2016 - May 2018 |
+| iotec Global | Senior Data Scientist | May 2018 - Aug. 2018 |
+| Equiniti Data | Senior Data Scientist | Aug. 2018 - Present |
+
+## Clients Worked With
+
+## Key Skills
+
+| Language | Years of Experience |
+| -------- | ------------------- |
+| R | 9 years |
+| Python | 4 years |
+| SQL | 7 years |
+| LaTeX | 7 years |
+| bash | 6 years |
+| git | 7 years |
+
+## My Type of Work
+
+* Software development
+* Building data analysis pipelines
+* Data analysis
+* Machine learning
+* Statistical modelling
+* Data visualisation
+
+# A Brief History of R
+
+## The Birth of R
+
+* Before R, there was S
+* S was created at Bell Labs in 1976 by John Chambers
+* S Plus was developed by TIBCO Software in 1988
+* R was created in 1992 by Ross Ihaka and Robert Gentleman at the University of Auckland, New Zealand
+* The first stable release was in 1995
+* R is now maintained by the R Development Core Team
+
+## CRAN
+
+* The Comprehensive R Archive Network (CRAN) is where you will find the majority (over 13,500) supplementary packages
+* You can find additional packages on Bioconductor, Omegahat, GitHub, etc.
+
+## R and Other Languages
+
+* R is written with a combination of C and Fortran
+* More advanced users can write C, C++, .NET, Java, Python, JavaScript and Go code and call it directly from R
+
+## The Birth of Data Science
+
+* R has become increasingly popular. As of February 2019, <footnote content="https://www.tiobe.com/tiobe-index/">R ranks 15th in the TIOBE index</footnote>, a measure of popularity of programming languages
+* 90% of the world's data was <footnote content="https://www.mediapost.com/publications/article/291358/90-of-todays-data-created-in-two-years.html">created in the last two years</footnote>
+
+## RStudio
+
+* RStudio are a company which develop the fantastic (and free) R IDE of the same name
+* The intial release was in 2011
+* RStudio and its team have contributed to many open source packages including
+  * Tidyverse – R packages for data science, including ggplot2, dplyr, tidyr, and purrr
+  * Shiny – An interactive web technology
+  * RMarkdown – Insert R code into markdown documents
+  * knitr – Dynamic reports combining R, TeX, Markdown & HTML
+  * packrat – Package dependency tool
+  * devtools – Package development tool
+
+# What Can R Do?
+
+## Interpreted Language
+
+```{r interp}
+2 + 2
+```
+
+# Data Manipulation
+
+## readr{.smaller}
+
+```{r read_data}
+qof_data <- read_csv(
+  here(
+    'data', 
+    'QOF 2017-18- Prevalence, achievements and exceptions at CCG level.csv'
+  )
+)
+```
+
+## readr{.smaller}
+
+```{r view_data}
+qof_data
+```
+
+# dplyr
+
+## dplyr
+
+* dplyr is a grammar of data manipulation, providing a consistent set of verbs that help you solve the most common data manipulation challenges
+  * `mutate()` adds new variables that are functions of existing variables
+  * `select()` picks variables based on their names.
+  * `filter()` picks cases based on their values.
+  * `summarise()` reduces multiple values down to a single summary.
+  * `arrange()` changes the ordering of the rows.
+* These all combine naturally with `group_by()` which allows you to perform any operation “by group”
+
+## Renaming Columns{.smaller}
+
+```{r rename}
+qof_data <- 
+  qof_data %>% 
+  rename_all(funs(gsub("\\(|\\)|\\+", "", gsub(" |-", "_", tolower(.)))))
+qof_data
+```
+
+## Selecting Columns{.smaller}
+
+```{r select}
+alt_data <- 
+  qof_data %>%
+  select(
+    ccg_name, total_exceptions_2016_2017, total_exceptions_2017_2018,
+    patients_receiving_intervention_per_cent
+  )
+alt_data
+```
+
+## Filtering Columns{.smaller}
+
+```{r filter}
+alt_data <-
+  alt_data %>%
+  filter(ccg_name %in% c(
+     "NHS KERNOW CCG", "NHS NORTHERN, EASTERN AND WESTERN DEVON CCG", 
+     "NHS SOUTH DEVON AND TORBAY CCG"
+    )
+  )
+alt_data
+```
+
+## Sorting Columns{.smaller}
+
+```{r arrange}
+alt_data <-
+  alt_data %>%
+  arrange(patients_receiving_intervention_per_cent)
+alt_data
+```
+
+## Mutating Columns{.smaller}
+
+```{r mutate}
+alt_data <-
+  alt_data %>% 
+  mutate(
+    exception_rate_yoy_change = (total_exceptions_2016_2017 / total_exceptions_2017_2018) * 100
+  )
+alt_data
+```
+
+## dplyr Chaining{.smaller}
+
+```{r dplyr_full}
+qof_data %>%
+  filter(ccg_name %in% c(
+    "NHS KERNOW CCG", "NHS NORTHERN, EASTERN AND WESTERN DEVON CCG", 
+    "NHS SOUTH DEVON AND TORBAY CCG"
+  )
+) %>% 
+  select(
+    ccg_name, total_exceptions_2016_2017, total_exceptions_2017_2018, 
+    patients_receiving_intervention_per_cent
+  ) %>% 
+  arrange(patients_receiving_intervention_per_cent) %>% 
+  mutate(
+    exception_rate_yoy_change = (total_exceptions_2016_2017 / total_exceptions_2017_2018) * 100
+  )
+```
+
+## Summarising Data{.smaller}
+
+```{r summarise}
+qof_data %>% 
+  summarise(
+    mean_prip = mean(patients_receiving_intervention_per_cent),
+    max_prip = max(patients_receiving_intervention_per_cent),
+    min_prip = min(patients_receiving_intervention_per_cent)
+  ) %>% 
+  mutate(range_prip = max_prip - min_prip)
+```
+
+## Grouping Data{.smaller}
+
+```{r group}
+qof_data %>% 
+  group_by(sub_region_name) %>% 
+  summarise(mean_prip = mean(patients_receiving_intervention_per_cent))
+```
+
+# Plotting
+
+## History of Plotting in R
+
+* R comes with the base `graphics` package
+* Later the `lattice` package and `grid` package were developed
+* `ggplot2` was developed on top of `grid` and is developed on the theory of the "grammar of graphics"
+
+## ggplot2
+
+```{r sheet, eval = FALSE}
+p <- ggplot(
+  data = qof_data,
+  aes(x = total_exceptions_2016_2017, y = total_exceptions_2017_2018)
+)
+```
+
+## ggplot2
+
+```{r sheet2, echo = FALSE}
+p <- ggplot(
+  data = qof_data,
+  aes(x = total_exceptions_2016_2017, y = total_exceptions_2017_2018)
+)
+p
+```
+
+## Points
+
+```{r ggplot_prep, eval = FALSE}
+p <- p + 
+  geom_point()
+```
+
+## Points
+
+```{r ggplot_prep2, echo = FALSE}
+p <- p + geom_point()
+p
+```
+
+## Lines
+
+```{r lines, eval = FALSE}
+p <- p +
+  geom_smooth(method = "lm")
+```
+
+## Lines
+
+```{r lines2, echo = FALSE}
+p <- p +
+  geom_smooth(method = "lm")
+p
+```
+
+## Labels
+
+```{r labels, eval = FALSE}
+p <- 
+  p + 
+  labs(
+    x = "2016 - 2017", y = "2017 - 2018", 
+    title = "Blood Pressure", subtitle = "Total Exceptions"
+  )
+```
+
+## Labels
+
+```{r labels2, echo = FALSE}
+p <- p + labs(
+  x = "2016 - 2017", y = "2017 - 2018", 
+  title = "Blood Pressure", subtitle = "Total Exceptions"
+)
+p
+```
+
+## ggplot2 Extensions
+
+* There are many extension packages that have been written for `ggplot2`
+* These packages are showcased at <https://www.ggplot2-exts.org/>
+
+## ggplot2 Map
+
+```{r uk_map, echo = FALSE}
+shape <- readOGR(
+  dsn = here(
+    'data', 
+    'Clinical_Commissioning_Groups_April_2018_Ultra_Generalised_Clipped_Boundaries_in_England'
+  ),
+  verbose = FALSE
+)
+
+shape <- sp::spTransform(shape, sp::CRS("+init=epsg:4326"))
+
+shape@data <- shape@data %>% left_join(qof_data, by = c("ccg18cd" = "ccg_geography_code"))
+
+map_data <- 
+  fortify(shape) %>% 
+  left_join(shape@data %>% select(-long, -lat), by = c("id" = "objectid"))
+
+ggplot(
+  data = map_data,
+  aes(long, lat, group = group, fill = patients_receiving_intervention_per_cent)
+) +
+  geom_polygon() +
+  geom_path(color = "white", size = 0.1) +
+  coord_equal() +
+  scale_fill_continuous('Patients Receiving Intervention (%)') +
+  theme_void() +
+  theme(legend.position = "bottom", legend.title = element_text(hjust = 0)) +
+  guides(fill = guide_colourbar(title.position = "top", title.hjust = 0.5, barwidth = 12))
+```
+
+##  {data-background=https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F52025643%2F278385986817%2F1%2Foriginal.jpg?auto=compress&s=68bb6f4313183a19c7803393ffe37532}
+
+## Statistical Programming
+
+* R is first and foremost designed as a statistical programming langauge
+* It can do all sorts of statistical analyses, from $t$-tests to machine learning
+* There are hundreds of advanced, production quality packages for statistical analysis such as `caret` and `mlr`
+
+## Linear Regression Example
+
+```{r lm}
+lm1 <- lm(total_exceptions_2016_2017 ~ total_exceptions_2017_2018, data = qof_data)
+summary(lm1)
+```
+
+# So R Is Just a Statistical Programming Language?
+
+## Not Quite!
+
+* R can...
+  * Make interactive graphics
+  * Make web applications
+  * Produce professional, word, pdf, excel, etc. documents
+  * Communicate with other languages such as Java, C++, Python and Go!
+
+## Interactive Plotting
+
+* You can create interactive graphics using `htmlwidgets`
+* `htmlwidgets` provides a wrapper for JavaScript libraries
+* You can see `htmlwidgets` examples at <http://www.htmlwidgets.org/showcase_leaflet.html>
+
+## Leaflet example
+
+```{r leaflet, echo = FALSE}
+bounds <- shape@bbox
+
+pal <- colorNumeric(
+  palette = "Blues",
+  domain = shape@data[, "patients_receiving_intervention_per_cent"]
+)
+
+shape@data <- shape@data %>%
+  mutate(origRows = as.numeric(rownames(.))) %>%
+  arrange_(.dots = "patients_receiving_intervention_per_cent") %>%
+  mutate(rank = rownames(.)) %>%
+  arrange(origRows)
+
+details <- sprintf(
+  "<strong>CCG: </strong>%s<br><strong>Value: </strong>%s<br><strong>Rank: </strong>%s",
+  gsub(" CCG", "", shape@data$ccg18nm),
+  shape@data[, "patients_receiving_intervention_per_cent"],
+  shape@data[, "rank"]
+) %>%
+  lapply(htmltools::HTML)
+
+# Create the plot
+leaflet(
+  options = leafletOptions(
+    minZoom = 4,
+    maxZoom = 8
+  )
+) %>% 
+  addProviderTiles(
+    providers$Stamen.TonerLines,
+    options = providerTileOptions(opacity = 0.2)
+  ) %>%
+  addProviderTiles(
+    providers$Stamen.TonerLabels, 
+    options = providerTileOptions(opacity = 0.35)
+  ) %>% 
+  addPolygons(
+    data = shape,
+    weight = 1,
+    fillColor = pal(shape@data[, "patients_receiving_intervention_per_cent"]),
+    fillOpacity = 0.8,
+    color = "black",
+    label = details,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto"
+    ),
+    layerId = shape@data$ccg18cd,
+    highlightOptions = highlightOptions(
+      color = "#000000",
+      weight = 3,
+      opacity = 1,
+      bringToFront = FALSE
+    )
+  )
+```
+
+## Application Building
+
+* It is possible to build interactive web applications in R by using `shiny`
+* `shiny` wraps HTML, JavaScript and CSS into an R package which you call using only R code
+* You can use custom HTML, JavaScript and CSS to extend `shiny`
+* There are lots of `shiny` application examples at <https://shiny.rstudio.com/gallery/>
+
+## Shiny Example
+
+```{r, echo=FALSE}
+bounds <- shape@bbox
+
+leaf_plot <- function(data = shape, bounds = bounds, column) {
+  
+  data@data <- data@data %>%
+    mutate(origRows = as.numeric(rownames(.))) %>%
+    arrange_(column) %>%
+    mutate(rank = rownames(.)) %>%
+    arrange(origRows)
+  
+  pal <- colorNumeric(
+    palette = "Blues",
+    domain = data@data[, column]
+  )
+  
+  details <- sprintf(
+    "<strong>CCG: </strong>%s<br><strong>Value: </strong>%s<br><strong>Rank: </strong>%s",
+    gsub(" CCG", "", data@data$ccg18nm),
+    data@data[, column],
+    data@data[, "rank"]
+  ) %>%
+    lapply(htmltools::HTML)
+  
+  # Create the plot
+  leaflet(
+    options = leafletOptions(
+      minZoom = 4,
+      maxZoom = 8
+    )
+  ) %>% 
+    addProviderTiles(
+      providers$Stamen.TonerLines,
+      options = providerTileOptions(opacity = 0.2)
+    ) %>%
+    addProviderTiles(
+      providers$Stamen.TonerLabels, 
+      options = providerTileOptions(opacity = 0.35)
+    ) %>% 
+    addPolygons(
+      data = data,
+      weight = 1,
+      fillColor = pal(data@data[, column]),
+      fillOpacity = 0.8,
+      color = "black",
+      label = details,
+      labelOptions = labelOptions(
+        style = list("font-weight" = "normal", padding = "3px 8px"),
+        textsize = "15px",
+        direction = "auto"
+      ),
+      layerId = data@data$ccg18cd,
+      highlightOptions = highlightOptions(
+        color = "#000000",
+        weight = 3,
+        opacity = 1,
+        bringToFront = FALSE
+      )
+    )
+}
+
+shinyApp(
+  
+  ui = fluidPage(
+    selectInput("stat", "Statistic:",
+                choices = list(
+                  `List Size` = list(
+                    "Number of practices 2016_2017" = "number_of_practices_2016_2017", 
+                    "Number of practices 2017_2018" = "number_of_practices_2017_2018",
+                    "Ages 45+ 2016-2017" = "ages_45__2016_2017", 
+                    "Ages 45+ 2017-2018" = "ages_45_2017_2018"
+                  ),
+                  `Achievement` = list(
+                    "Total Achievement Score (max 15) 2016_2017" = "total_achievement_score_max_15_2016_2017",
+                    "Achievement (%) 2016-2017" = "achievement_per_cent_2016_2017", 
+                    "Total Achievement Score (max 15 per practice) 2017_2018" = "total_achievement_score_max_15_per_practice_2017_2018", 
+                    "Achievement (%) 2017-2018" = "achievement_per_cent_2017_2018",
+                    "Year on year change (%)" = "year_on_year_change_percentage_point"
+                  ),
+                  `Exceptions` = list(
+                    "Total Exceptions 2016_2017" = "total_exceptions_2016_2017", 
+                    "Total Denominators 2016_2017" = "total_denominators_2016_2017", 
+                    "Overall Exception Rate (%) 2016_2017" = "overall_exception_rate_per_cent_2016_2017", 
+                    "Total Exceptions 2017_2018" = "total_exceptions_2017_2018", 
+                    "Total Denominators 2017_2018" = "total_denominators_2017_2018", 
+                    "Overall Exception Rate (%) 2017_2018" = "overall_exception_rate_per_cent_2017_2018",
+                    "Year on year change (%)" = "year_on_year_change_percentage_point_1"
+                  ),
+                  `BP002` = list(
+                    "Achievement Score (max 15 per practice)" = "achievement_score_max_15_per_practice", 
+                    "Numerator" = "numerator", 
+                    "Denominator" = "denominator", 
+                    "Underlying Achievement net of Exceptions (%)" = "underlying_achievement_net_of_exceptions_per_cent", 
+                    "Exceptions" = "exceptions", 
+                    "Exception Rate (%)" = "exception_rate_per_cent", 
+                    "Denominator plus Exceptions" = "denominator_plus_exceptions", 
+                    "Patients receiving Intervention (%)" = "patients_receiving_intervention_per_cent"
+                  )
+                )
+    ),
+    leafletOutput("leafPlot")
+  ),
+  
+  server = function(input, output) {
+    output$leafPlot = renderLeaflet({
+      leaf_plot(column = input$stat)
+    })
+  },
+  
+  options = list(height = 500)
+)
+```
+
+## Documents
+
+* You can build many documents from R using `Rmarkdown`
+* This is an `Rmarkdown` presentation! 
+* Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents (and more!) 
+* When you **knit** together an `Rmarkdown` document, a document will be generated that includes both content as well as the output of any embedded R code "chunks" within the document
+* For more details on using R Markdown see <http://rmarkdown.rstudio.com>
+
+## R can...
+
+* Read in data
+* Clean and manipulate data
+* Produce complex graphics
+* Perform statistical analyses
+* Create interactive graphics
+* Create websites and web applications
+* Produce documents of many formats
+
+## Any Questions?
+
+<table style="width:100%">
+  <tr>
+    <td><img src="https://image.flaticon.com/icons/png/512/25/25231.png" alt="GitHub" style="width:50px;height:50px;"></td>
+    <td>nathaneastwood</td> 
+  </tr>
+  <tr>
+    <td><img src="https://image.flaticon.com/icons/png/512/23/23931.png" alt="GitHub" style="width:50px;height:50px;"></td>
+    <td>@nathaneastwood_</td> 
+  </tr>
+  <tr>
+    <td><img src="https://image.flaticon.com/icons/png/512/61/61109.png" alt="LinkedIn" style="width:50px;height:50px;"></td>
+    <td>nathaneastwood</td> 
+  </tr>
+  <tr>
+    <td><img src="https://www.scouts.ie/ImageLibrary/News-Images/2017/www-logo.png" alt="WebPage" style="width:50px;height:50px;"></td>
+    <td>http://nathaneastwood.github.io</td> 
+  </tr>
+</table>

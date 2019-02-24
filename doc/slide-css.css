@@ -1,0 +1,12 @@
+
+.leaflet-top {
+  z-index: 1;
+}
+
+.leaflet-left {
+  z-index: 1;
+}
+
+.leaflet-container .leaflet-control-attribution {
+  font-size: 0;
+}
