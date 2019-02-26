@@ -18,6 +18,7 @@ library(leaflet)
 library(shiny)
 library(tibble)
 options(tibble.print_max = 5, max.print=5, tibble.width = 80, width = 80)
+library(qicharts2)
 ```
 
 <style>
@@ -74,7 +75,7 @@ div.footnotes {
 
 ## Education
 
-| Univeristy | Degree | Grade |
+| University | Degree | Grade |
 | ---------- | ------ | ----- |
 | Plymouth University | BSc Mathematics and Statistics | $1^{st}$ Class (Hons) |
 | Sheffield University | MSc Statistics | Distinction |
@@ -91,6 +92,14 @@ div.footnotes {
 | Equiniti Data | Senior Data Scientist | Aug. 2018 - Present |
 
 ## Clients Worked With
+
+* Ministry of Defence
+* Public Health England
+* Office for National Statistics
+* HAYS Recruitment
+* NATO
+* Direct Line Group
+* and many more!
 
 ## Key Skills
 
@@ -141,14 +150,14 @@ div.footnotes {
 ## RStudio
 
 * RStudio are a company which develop the fantastic (and free) R IDE of the same name
-* The intial release was in 2011
+* The initial release was in 2011
 * RStudio and its team have contributed to many open source packages including
-  * Tidyverse – R packages for data science, including ggplot2, dplyr, tidyr, and purrr
-  * Shiny – An interactive web technology
-  * RMarkdown – Insert R code into markdown documents
-  * knitr – Dynamic reports combining R, TeX, Markdown & HTML
-  * packrat – Package dependency tool
-  * devtools – Package development tool
+  * Tidyverse – R packages for data science, including `ggplot2`, `dplyr`, `tidyr`, and `purrr`
+  * `Shiny` – An interactive web technology
+  * `RMarkdown` – Insert R code into markdown documents
+  * `knitr` – Dynamic reports combining R, TeX, Markdown & HTML
+  * `packrat` – Package dependency tool
+  * `devtools` – Package development tool
 
 # What Can R Do?
 
@@ -398,9 +407,35 @@ ggplot(
 
 ##  {data-background=https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F52025643%2F278385986817%2F1%2Foriginal.jpg?auto=compress&s=68bb6f4313183a19c7803393ffe37532}
 
+## qicharts2
+
+```{r qic, echo = FALSE}
+# Lock random number generator to make examples reproducible.
+set.seed(19)
+
+# Generate 24 random numbers from a normal distribution.
+y <- rnorm(24)
+
+y[22] <- 4
+
+qic(y, chart = 'i')
+```
+
+## Pareto charts
+
+```{r pareto, echo = FALSE}
+gtt_ae_types <- gtt %>%
+  gather(severity, category, E:I) %>% 
+  filter(complete.cases(.))
+paretochart(gtt_ae_types$category,
+            title = 'Pareto chart of harm category')
+```
+
+# Statistical Programming
+
 ## Statistical Programming
 
-* R is first and foremost designed as a statistical programming langauge
+* R is first and foremost designed as a statistical programming language
 * It can do all sorts of statistical analyses, from $t$-tests to machine learning
 * There are hundreds of advanced, production quality packages for statistical analysis such as `caret` and `mlr`
 
